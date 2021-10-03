@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Maneuver Creator X</title>
+    <link rel="stylesheet" href="ion.rangeSlider.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="J-Calculator-Bundle.css">
+</head>
+
+<body>
+    <!-- Miscelenous Stuff -->
+
+    <div id="dpi" style="height: 1cm; width: 1cm; left: 100%; position: fixed; top: 100%;"></div>
+
+    <script lang="javascript">
+        var dpi_x = document.getElementById('dpi').offsetWidth;
+        var dpi_y = document.getElementById('dpi').offsetHeight;
+        var actual_Width = screen.width / dpi_x;
+        var actual_Height = screen.height / dpi_y;
+    </script>
+
+    <!-- Actual Program -->
+
+    <div id="disp" class="c-Full h-100 w-100">
+        <div id="nav" class="border-right border-444 p-1 py-2 p-oChildren">
+            <div id="title" class="uppercase font-bold text-center m-1">
+                <span class="text-crimson">Custom</span> Maneuver Creator
+            </div>
+            <div class="tab-buttons text-center selected" onclick="tabOrganizer(0)">
+                Main Inputs
+            </div>
+            <div class="tab-buttons text-center" onclick="tabOrganizer(1)">
+                Sequence
+            </div>
+            <div class="tab-buttons text-center" onclick="tabOrganizer(2)">
+                Visualize
+            </div>
+            <div class="tab-buttons text-center" onclick="tabOrganizer(3),coder()">
+                Code
+            </div>
+            <div class="tab-buttons text-center" onclick="tabOrganizer(4)">
+                Storage
+            </div>
+            <div class="tab-buttons text-center" onclick="tabOrganizer(5)">
+                About
+            </div>
+        </div>
+        <div id="tabs" class="c-FullHeight ">
+            <!-- Main Inputs Tab -->
+            <div class="tab p-1 rounded b-oChildren" id="tab-mi">
+                <div id="t1-warn" class="">
+                    Please Enter <span class="font-bold">Fullscreen</span> for a Better View!
+                </div>
+
+                <div id="t1-manName" class="label-Left border border-333 border-thick">
+                    <div class="rounded">
+                        Maneuver Name
+                    </div>
+                    <input type="text" class="bg-333 p-2 text-white"
+                        placeholder="'Sometimes, the best names are the ones that say exactly what they are'" id="maneuver_name_input">
+                </div>
+
+                <div id="t1-robDim" class="bg-333 two-Rows mt-1 border border-333 oveflow border-thick rounded gap-2">
+                    <div class="bg-222 text-middle">Robot Dimensions</div>
+                    <div class="two-Columns gap-2">
+                        <div class="bg-teal">
+                            <input type="number" class="w-100 h-100 bg-teal text-white text-center input-labelBelow"
+                                data-label="height" data-border="" value="10"
+                                oninput="robVal.dimY = parseFloat(this.value), tabOperations_1()" min="0">
+                        </div>
+                        <div class="bg-teal">
+                            <input type="number" class="w-100 h-100 bg-teal text-white text-center input-labelBelow"
+                                data-label="width" data-border="" value="10"
+                                oninput="robVal.dimX = parseFloat(this.value), tabOperations_1()" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="t1-inpGrp1" class="rounded b-oChildren">
+
+                    <div id="t1-inf3" class="information bg-333 mt-1 border border-333 border-thick"
+                        data-for="t1-robDim">
+                        <div class="Attention">!</div> If there is only one input, then the value of the other input is
+                        automatically the value of another input. This is to avoid Errors or to easily create a square
+                        dimension quick since square robots are quite common.
+                    </div>
+
+                    <div id="t1-robMxspeed" class="bg-333 two-Columns mt-1 border border-333 border-thick gap-2">
+                        <div class="text-middle bg-222 border border-222 rounded p-2">
+                            Max Speed
+                        </div>
+                        <div class="bg-crimson">
+                            <input type="number" class="w-100 h-100 text-white text-center bg-crimson input-labelBelow"
+                                data-label="units/s" value="30"
+                                oninput="robVal.maxSpeed = parseFloat(this.value), tabOperations_1()" min="0">
+                        </div>
+                    </div>
+
+                    <div id="t1-inf1" class="information bg-333 mt-1 border border-333 border-thick"
+                        data-for="t1-robMxspeed">
+                        <div class="Attention">!</div> To get the <span class="text-cyan font-bold">Max Speed</span>,
+                        You need to program the robot to move forward in a straight line for a second and measure the
+                        distance it travelled.
+                        This part is crucial, It is one of the base values of almost all of the formulas I used, If you
+                        got this wrong then all generated data are wrong.
+                    </div>
+
+                    <div id="t1-robWhdiam" class="bg-333 two-Columns mt-1 border border-333 border-thick gap-2">
+                        <div class="text-middle bg-222 border border-222 rounded p-2">
+                            Wheel Distance
+                        </div>
+                        <div class="bg-crimson">
+                            <input type="number" class="w-100 h-100 text-white text-center bg-crimson input-labelBelow"
+                                data-label="units"
+                                oninput="robVal.wheelDist = parseFloat(this.value), tabOperations_1()" value="9"
+                                min="0">
+                        </div>
+                    </div>
+
+                    <div id="t1-inf2" class="information bg-333 mt-1 border border-333 border-thick"
+                        data-for="t1-robWhdiam">
+                        <div class="Attention">!</div>The <span class="text-cyan font-bold">Wheel Distance</span> is the
+                        distance between the middle of the left wheel to the middle of the right wheel. Meausuring this
+                        will create the anchor point in between that is used for the rotation of the robot
+                    </div>
+
+                    <div class="bg-333 mt-1 p-1 border border-222 border-thick">
+                        <div class="Attention">!</div> Unit used are not necessary to be in centimeters or meters, As
+                        long as you use only one type of unit then you don't have to worry about mis-calculations. <br>
+                        <br>
+                        Centimeters is a common unit that is usually used for small robots, which this project was
+                        supposed for.
+                    </div>
+
+                </div>
+
+                <div id="t1-dispRob" class="bg-222 mt-1 ml-1">
+                    <div id="dimVisual">
+                        <div>
+                            <div class="text-center text-end text-crimson">Wheel Distance</div>
+                        </div>
+                    </div>
+                    <div id="dimLineY">
+                        <div>
+                            <div></div>
+                        </div>
+                        <div class="text-middle font-bold text-cyan bg-111"></div>
+                        <div>
+                            <div></div>
+                        </div>
+                    </div>
+                    <div id="dimLineX">
+                        <div>
+                            <div></div>
+                        </div>
+                        <div class="text-middle font-bold text-cyan bg-111"></div>
+                        <div>
+                            <div></div>
+                        </div>
+                    </div>
+                    <div id="dimLineWheel">
+                        <div>
+                            <div></div>
+                        </div>
+                        <div class="text-middle font-bold text-crimson bg-111"></div>
+                        <div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="t1-envInput" class="bg-222 mt-1 ml-1">
+                    <div
+                        class="border-bottom border-thick border-333 radio-Container three-Columns font-bold text-center">
+                        <input type="radio" name="envChoose" id="env_def" checked>
+                        <label for="env_def" onclick="env_change(0)">Default</label>
+                        <input type="radio" name="envChoose" id="env_sumo">
+                        <label for="env_sumo" onclick="env_change(1)">Sumo-Bot</label>
+                        <input type="radio" name="envChoose" id="env_line">
+                        <label for="env_line" onclick="env_change(2)">Line Tracing</label>
+                    </div>
+                    <div class="bg-333 c-Full text-center">
+                        <div class="env-Tab p-1" id="t1_env_1">
+                            In Default Mode. The robot is in free plane and has a starting point of (0,0).
+                        </div>
+                        <div class="env-Tab c-Full text-center" id="t1_env_2">
+                            <div class="two-Rows text-white">
+                                <div class="label-Left text-center">
+                                    <div class="p-h5 border-right border-top border-left border-medium border-555">
+                                        Arena Radius
+                                    </div>
+                                    <input type="number"
+                                        class="bg-444 border-555 border-medium border-top border-right text-white text-center"
+                                        placeholder="radius and not diameter">
+                                </div>
+                                <div class="label-Left">
+                                    <div class="p-h5 border border-555 border-medium">
+                                        Robot Coordinates
+                                    </div>
+                                    <div class="two-Columns">
+                                        <input type="number"
+                                            class="bg-444 border-top border-555 border-medium border-bottom text-white text-center"
+                                            placeholder="x-coodinate">
+                                        <input type="number"
+                                            class="bg-444 border-left border-555 border-medium border-top border-bottom border-right text-white text-center"
+                                            placeholder="y-coordinate">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="env-Tab c-Full" id="t1_env_3">
+                            <div class="two-Rows text-white">
+                                <div class="label-Left text-center">
+                                    <div class="p-h5 border-top border-left border-right border-555 border-medium">
+                                        Arena Dimensions
+                                    </div>
+                                    <div class="two-Columns">
+                                        <input type="number"
+                                            class="bg-444 border-top border-555 border-medium text-white text-center"
+                                            placeholder="Length">
+                                        <input type="number"
+                                            class="bg-444 border-left border-555 border-medium border-top border-right text-white text-center"
+                                            placeholder="Width">
+                                    </div>
+                                </div>
+                                <div class="label-Left">
+                                    <div class="p-h5 border border-555 border-medium">
+                                        Robot Coordinates
+                                    </div>
+                                    <div class="two-Columns">
+                                        <input type="number"
+                                            class="bg-444 border-top border-555 border-medium border-bottom text-white text-center"
+                                            placeholder="x-coodinate">
+                                        <input type="number"
+                                            class="bg-444 border-left border-555 border-medium border-top border-bottom border-right text-white text-center"
+                                            placeholder="y-coordinate">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="t1-miscInput" class="bg-222 ml-1 p-1">
+                    <div class="font-bold text-center pb-1">Motor Driver Pins</div>
+                    <div id="t1-motCont" class="">
+                        <div class="radio-Container three-Columns border">
+                            <input type="radio" name="motChoose" id="mot_single" checked>
+                            <label for="mot_single" class="border-right" onclick="mot_change(0)">Single</label>
+                            <input type="radio" name="motChoose" id="mot_double">
+                            <label for="mot_double" class="border-right" onclick="mot_change(1)">Double</label>
+                            <input type="radio" name="motChoose" id="mot_triple">
+                            <label for="mot_triple" onclick="mot_change(2)">Triple</label>
+                        </div>
+                        <div class="bg-333 mt-1">
+                            <div id="t1_mot-single" class=" two-Rows border border-teal mot-Tab">
+                                <div class="bg-teal three-Columns c-FullWidth p-1 p-oChildren">
+                                    <input type="number" class="text-center bg-333 text-white border border-teal"
+                                        placeholder="positive-left">
+                                    <input type="number" class="text-center bg-333 text-white border border-teal"
+                                        placeholder="speed-left">
+                                    <input type="number" class="text-center bg-333 text-white border border-teal"
+                                        placeholder="negative-left">
+                                </div>
+                                <div class="three-Columns c-FullWidth p-1 p-oChildren">
+                                    <input type="number" class="text-center bg-333 text-white border-right border-teal border-left border-bottom"
+                                        placeholder="positive-right">
+                                    <input type="number" class="text-center bg-333 text-white border-right border-left border-teal border-bottom" placeholder="speed-right">
+                                    <input type="number" class="text-center bg-333 text-white border-left border-teal border-right border-bottom"
+                                        placeholder="negative-right">
+                                </div>
+                            </div>
+                            <div id="t1_mot-double" class="mot-Tab border border-olive">
+                                <div class="bg-olive three-Columns c-FullWidth p-1 p-oChildren">
+                                    <input type="number" class="text-center bg-333 text-white border border-olive"
+                                        placeholder="positive-left">
+                                    <input type="number" class="text-center bg-333 text-white border border-olive"
+                                        placeholder="speed-left">
+                                    <input type="number" class="text-center bg-333 text-white border border-olive"
+                                        placeholder="negative-left">
+                                </div>
+                                <div class="three-Columns c-FullWidth p-1 p-oChildren">
+                                    <input type="number" class="text-center bg-333 text-white border-right border-olive border-left border-bottom"
+                                        placeholder="positive-right">
+                                    <input type="number" class="text-center bg-333 text-white border-right border-left border-olive border-bottom" placeholder="speed-right">
+                                    <input type="number" class="text-center bg-333 text-white border-left border-olive border-right border-bottom"
+                                        placeholder="negative-right">
+                                </div>
+                            </div>
+                            <div id="t1_mot-triple" class="mot-Tab border border-crimson">
+                                <div class="bg-crimson three-Columns c-FullWidth p-1 p-oChildren">
+                                    <input type="number" class="text-center bg-333 text-white border border-crimson"
+                                        placeholder="positive-left">
+                                    <input type="number" class="text-center bg-333 text-white border border-crimson"
+                                        placeholder="speed-left">
+                                    <input type="number" class="text-center bg-333 text-white border border-crimson"
+                                        placeholder="negative-left">
+                                </div>
+                                <div class="three-Columns c-FullWidth p-1 p-oChildren">
+                                    <input type="number" class="text-center bg-333 text-white border-right border-crimson border-left border-bottom"
+                                        placeholder="positive-right">
+                                    <input type="number" class="text-center bg-333 text-white border-right border-left border-crimson border-bottom" placeholder="speed-right">
+                                    <input type="number" class="text-center bg-333 text-white border-left border-crimson border-right border-bottom"
+                                        placeholder="negative-right">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-middle p-2 bg-333 mt-1 border border-444 border-thick font-bold text-center">
+                        Future Improvement Here:
+                        <br>
+                        Advance Styling
+                    </div>
+                </div>
+            </div>
+            <!-- Sequence Tab -->
+            <div class="tab p-1 rounded b-oChildren" id="tab-s">
+                <div id="t2-seqCont">
+                    <div class="bg-444 p-1 h3 font-bold">Actions :</div>
+                    <div class="four-Columns p-1 p-oChildren bg-444" data-class-preserve="pb-1">
+                        <button onclick="addAction('0')">Line</button>
+                        <button onclick="addAction('1')">Curve</button>
+                        <!-- <button onclick="addAction('2')">Wave</button>
+                        <button onclick="addAction('3')">Soft Turn</button> -->
+                    </div>
+                    <div id="seqCont">
+                    </div>
+                </div>
+                <div id="t2-miniVisual">
+                    <div class="bg-333 box-shadow-inset m rounded">
+
+                    </div>
+                    <div class="bg-333 p-2 rounded box-shadow-inset">
+                        <strong>Details:</strong>
+                        <hr>
+                        <p class="indent-3">No details about the path yet</p>
+                    </div>
+                </div>
+                <div id="t2-toolCont" class="bg-333 rounded p-2">
+                    <button class="colspan-2" style="border-bottom: thin solid white; background-color: #333;">Select</button>
+                    <button class="t2-muted" onclick="tManager_visual(this.innerHTML)">Move Up</button>
+                    <button class="t2-muted" onclick="tManager_visual(this.innerHTML)">Move Down</button>
+                    <button class="t2-muted" onclick="tManager_visual(this.innerHTML)">Move Up++</button>
+                    <button class="t2-muted" onclick="tManager_visual(this.innerHTML)">Move Down++</button>
+                    <button class="t2-muted colspan-2" onclick="tManager_visual(this.innerHTML)">Paste</button>
+                    <button class="rowspan-4 colstart-3 t2-muted" id="t2-delBtn" onclick="tManager_visual(this.innerHTML)">Delete</button>
+                </div>
+            </div>
+            <!-- Visualize Tab -->
+            <div class="tab" id="tab-v">
+
+                <div id="visualPane" class="bg-222">
+
+                </div>
+
+                <div id="visualTools" class="bg-333 border border-222">
+
+                </div>
+
+            </div>
+            <!-- Code Tab -->
+            <div class="tab" id="tab-c" class="monospace" onclick="coder()">
+                <pre>Null : No Output Code at the moment
+                </pre>
+                <button id="tab-4-btn-copyAll">Copy All</button>
+                <button id="tab-4-btn-copyMOnly">Copy Maneuver Only</button>
+            </div>
+            <!-- Storage Tab -->
+            <div class="tab" id="tab-st">Storage</div>
+            <!-- About Tab -->
+            <div class="tab" id="tab-a">About</div>
+        </div>
+    </div>
+    <!-- Modal Container -->
+    <div id="Modal_Container">
+        <!-- Add Line Modal -->
+        <div id="modal_addLine" data-display='grid'>
+            <div class="seqAdd_title text-middle bg-222">Add Line</div>
+            <div class="two-Rows border">
+                <div class="text-middle border-bottom font-bold bg-222">End Point Input Type</div>
+                <select class="bg-teal text-white tab_changer-select" data-tabs="lineAdd-firstInputGroup"
+                    data-mode="byChildren" data-temp="addLineManager(`epType,${this.value}`)">
+                    <option value="Angle and Length">Angle and Length</option>
+                    <option value="Relative Coordinates">Relative Coordinates</option>
+                </select>
+            </div>
+            <div class="bg-222 border" id="lineAdd-firstInputGroup">
+                <div data-display="grid" class="c-Full h-100">
+                    <div class="border p-1 two-Columns two-Rows gap-2">
+                        <div class="angleRangeSlider" style="display: inline;" data-width="100" data-height="100"
+                            data-output-id="lineAdd-fIG-angle"
+                            data-result-output="addLineManager(`angle,${angle}`,true),addLineManager(`inverse,${c.dataset.inverse}`)">
+                        </div>
+                        <div>
+                            <div class="border p-h5">
+                                <input type="number" id="lineAdd-fIG-angle" class="small-Input mr-1" min="-359"
+                                    max="359"><sup class="ml--3">o</sup>
+                                angle
+                                <div class="border-top mt-1">
+                                    <input type="number" class="small-Input" value="5" min="1"
+                                        oninput="angleRangeSliderData('lineAdd-fIG-angle_canvasOrigin','steps',this.value),addLineManager(`steps,${this.value}`,true)">
+                                    <span class="ml--3">steps</span>
+                                </div>
+                                <div class="border-top mt-1 pt-1">
+                                    <input type="checkbox" name="random_1-n" class="border" id="random_1"
+                                        onchange="angleRangeInverser('lineAdd-fIG-angle_canvasOrigin',this.checked)">
+                                    <label for="random_1">Inverse</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="colspan-2 border p-1">
+                            <input type="range" class="range-type1" data-from="1" id="random_2-rangeOrigin"
+                                data-temp="addLineManager(`length,${val.from}`)">
+                            <span class="mr-1">Length : </span>
+                            <input type="number" id="random_2" value="1" class="small-Input" min="0"
+                                data-temp="addLineManager(`length,${this.value}`)"><span>units</span>
+                        </div>
+                    </div>
+                    <div class="border two-Columns gap-2 p-1 text-white" id="micro-display-1">
+                        <div class="bg-crimson text-middle text-center">x</div>
+                        <div class="bg-crimson  text-middle text-center">y</div>
+                        <div class="bg-teal  text-middle text-center">Angle</div>
+                        <div class="bg-teal  text-middle text-center">Length</div>
+                    </div>
+                </div>
+                <div data-display="grid" class="c-Full h-100">
+                    <div class="border grid">
+                        <div class="text-center border-bottom bg-333 p-1">X - Coordinates</div>
+                        <input type="range" class="range-type1 border-bottom" id="random_3-rangeOrigin" data-min="-10"
+                            data-temp="addLineManager(`x,${val.from}`)">
+                        <div class="p-1 border-top">
+                            <input type="number" class="small-Input" value="0" id="random_3"
+                                data-temp="addLineManager(`x,${this.value}`)">
+                            <span class="ml--3">X-units</span>
+                        </div>
+                        <div class="text-center border-bottom border-top bg-333 p-1">Y - Coordinates</div>
+                        <input type="range" class="range-type1 border-bottom" id="random_4-rangeOrigin" data-min="-10"
+                            data-temp="addLineManager(`y,${val.from}`)">
+                        <div class="p-1 border-top">
+                            <input type="number" class="small-Input" value="0" id="random_4"
+                                data-temp="addLineManager(`y,${this.value}`)">
+                            <span class="ml--3">Y-units</span>
+                        </div>
+                    </div>
+                    <div class="border two-Columns gap-2 p-h5 text-white" id="micro-display-2">
+                        <div class="bg-teal text-center text-middle">x</div>
+                        <div class="bg-teal  text-center text-middle">y</div>
+                        <div class="bg-crimson  text-center text-middle">Angle</div>
+                        <div class="bg-crimson  text-center text-middle">Length</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-222 border two-Rows text-center sr-only"> 
+                <span>Future Improvement Here : </span>
+                <strong>Logic Branch</strong>
+            </div>
+            <div class="two-Rows border">
+                <div class="text-middle border-bottom font-bold bg-222 text-center">Path Measurement Input Type</div>
+                <div class="text-middle uppercase bg-crimson">Time</div>
+            </div>
+            <div class="bg-222 border" style="display: flex; flex-direction: column;">
+                <div class="p-1 text-center border-bottom">Time Multiplier</div>
+                <div class="p-1">
+                    <input type="range" class="range-type1" id="random_t1-rangeOrigin" data-max="1" data-min="0"
+                        data-from="1" data-step=".01" data-temp="addLineManager(`time,${val.from}`)">
+                </div>
+                <div class="p-1 border-top border-bottom">
+                    <input type="number" id="random_t1" class="small-Input" value="1"
+                        data-temp="addLineManager(`time,${this.value}`)" max="1" min="0.01">
+                    <span class="ml--3">x Speed Multipler</span>
+                </div>
+                <div class="realWorld_length gap-3">
+                    <div class="border p-2 m-1 text-middle cm">1cm</div>
+                    <div class="border p-2 m-1 text-middle">1in</div>
+                </div>
+                <div class="speed_visualMax p-1 border text-center mx-1">
+                    <div></div>
+                    <div>Max Speed</div>
+                </div>
+                <div class="speed_visualCurrent p-1 border mt-1 text-center mx-1">
+                    <div></div>
+                    <div>Current Speed</div>
+                </div>
+                <div class="two-Rows" style="flex-grow: 1;">
+                    <div class="display_maxSpeed text-center text-middle border-bottom">Max Speed<span
+                            class="global_display_maxSpeed"> 10 units/s </span> units/s </div>
+                    <div class="addLine_display_currentSpeed text-center text-middle bg-333">Current Speed: 10 units/s
+                    </div>
+                </div>
+            </div>
+            <div class="bg-222 border" style="display: flex; flex-direction: column;">
+                <div class="p-2 border-bottom text-center font-bold bg-olive ">Code Excuted Before the Action</div>
+                <textarea class="bg-222 p-1 monospace text-left text-white" style="flex-grow: 1;"
+                    placeholder="// Put your code here"></textarea>
+            </div>
+            <div class="bg-222 border" style="display: flex; flex-direction: column;">
+                <div class="p-2 border-bottom text-center font-bold bg-warning">Code Excuted After the Action</div>
+                <textarea class="bg-222 p-1 monospace text-left text-white" style="flex-grow: 1;"
+                    placeholder="// Put your code here"></textarea>
+            </div>
+            <div class="add_action-pathPreview bg-222 border" style="display: flex; flex-direction: column;">
+                <div class="p-1 text-center h5 border-bottom uppercase bg-555 font-bold">Path Preview</div>
+                <div style="flex-grow: 1;" class="bg-999 border-right border-white thisHeightthisWidth" id="add_line_pathPrev">
+                    <canvas class="m-auto"></canvas>
+                    <div class="text-middle text-center"></div>
+                </div>
+            </div>
+
+            <button class="seqAdd_Save bg-crimson border text-white font-bold uppercase" onclick="saveSeq('line'),ModalRevelear(0)">Save</button>
+        </div>
+        <!-- Add Curve Modal -->
+        <div id="modal_addCurve" data-display="grid">
+            <div class="seqAdd_title text-middle bg-222">Add Curve</div>
+            <div class="two-Rows border">
+                <div class="text-middle border-bottom font-bold bg-222">End Point Input Type</div>
+                <select class="bg-teal text-white tab_changer-select" data-tabs="curveAdd-firstInputGroup"
+                    data-mode="byChildren" data-temp="addCurveManager(`epType,${this.value}`)">
+                    <option value="Angle and Length">Angle and Length</option>
+                    <option value="Relative Coordinates">Relative Coordinates</option>
+                </select>
+            </div>
+            <div class="bg-222 border" id="curveAdd-firstInputGroup">
+                <div data-display="grid" class="c-Full h-100">
+                    <div class="border p-1 two-Columns two-Rows gap-2">
+                        <div class="angleRangeSlider" style="display: inline;" data-width="100" data-height="100"
+                            data-output-id="curveAdd-fIG-angle"
+                            data-result-output="addCurveManager(`angle,${angle}`,true),addCurveManager(`inverse,${c.dataset.inverse}`)">
+                        </div>
+                        <div>
+                            <div class="border p-h5">
+                                <input type="number" id="curveAdd-fIG-angle" class="small-Input mr-1" min="-359"
+                                    max="359"><sup class="ml--3">o</sup>
+                                angle
+                                <div class="border-top mt-1">
+                                    <input type="number" class="small-Input" value="5" min="1"
+                                        oninput="angleRangeSliderData('curveAdd-fIG-angle_canvasOrigin','steps',this.value),addCurveManager(`steps,${this.value}`,true)">
+                                    <span class="ml--3">steps</span>
+                                </div>
+                                <div class="border-top mt-1 pt-1">
+                                    <input type="checkbox" name="random_5-n" class="border" id="random_5"
+                                        onchange="angleRangeInverser('curveAdd-fIG-angle_canvasOrigin',this.checked)">
+                                    <label for="random_5">Inverse</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="colspan-2 border p-1">
+                            <input type="range" class="range-type1" data-from="1" id="random_6-rangeOrigin"
+                                data-temp="addCurveManager(`length,${val.from}`)">
+                            <span class="mr-1">Length : </span>
+                            <input type="number" id="random_6" value="1" class="small-Input" min="0"
+                                data-temp="addCurveManager(`length,${this.value}`)"><span>units</span>
+                        </div>
+                    </div>
+                    <div class="border two-Columns gap-2 p-1 text-white" id="micro-display-3">
+                        <div class="bg-crimson text-middle text-center">x</div>
+                        <div class="bg-crimson  text-middle text-center">y</div>
+                        <div class="bg-teal  text-middle text-center">Angle</div>
+                        <div class="bg-teal  text-middle text-center">Length</div>
+                    </div>
+                </div>
+                <div data-display="grid" class="c-Full h-100">
+                    <div class="border grid">
+                        <div class="text-center border-bottom bg-333 p-h5">X - Coordinates</div>
+                        <input type="range" class="range-type1 border-bottom" id="random_7-rangeOrigin" data-min="-10"
+                            data-temp="addCurveManager(`x,${val.from}`)">
+                        <div class="pl-1 border-top">
+                            <input type="number" class="small-Input" value="0" id="random_7"
+                                data-temp="addCurveManager(`x,${this.value}`)">
+                            <span class="ml--3">X-units</span>
+                        </div>
+                        <div class="text-center border-bottom border-top bg-333 p-h5">Y - Coordinates</div>
+                        <input type="range" class="range-type1 border-bottom" id="random_8-rangeOrigin" data-min="-10"
+                            data-temp="addCurveManager(`y,${val.from}`)">
+                        <div class="pl-1 border-top">
+                            <input type="number" class="small-Input" value="0" id="random_8"
+                                data-temp="addCurveManager(`y,${this.value}`)">
+                            <span class="ml--3">Y-units</span>
+                        </div>
+                    </div>
+                    <div class="border two-Columns gap-2 p-h5 text-white" id="micro-display-4">
+                        <div class="bg-teal text-center text-middle">x</div>
+                        <div class="bg-teal  text-center text-middle">y</div>
+                        <div class="bg-crimson  text-center text-middle">Angle</div>
+                        <div class="bg-crimson  text-center text-middle">Length</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-222 border two-Rows text-center sr-only"> 
+                <span>Future Improvement Here : </span>
+                <strong>Logic Branch</strong>
+            </div>
+
+            <!-- Time Input  -->
+            <div class="border">
+                <div class="p-1 text-center border-bottom bg-222">Time Multiplier</div>
+                <div class="p-h5">
+                    <input type="range" class="range-type1 m-h5" id="random_t2-rangeOrigin" data-max="1" data-min="0"
+                        data-from="1" data-step=".01" data-temp="addCurveManager(`time,${val.from}`)" data-hide-min-max="true">
+                </div>
+                <div class="p-1 border-top border-bottom sr-only">
+                    <input type="number" id="random_t2" class="small-Input" value="1"
+                        data-temp="addCurveManager(`time,${this.value}`)" max="1" min="0.01">
+                </div>
+            </div>
+
+            <!-- Angle Turned Input -->
+
+            <div class="border bg-222" style="display: flex; flex-direction: column;">
+                <div class="thisWidththisHeight relative">
+                    <!-- ARC-BASE -->
+                    <canvas class="arc-Canvas m-auto absolute thisWidththisHeight" data-inputs="random_arc1" data-width="200" data-height="200" width="200" height="200" data-value="180" data-direction="right" data-result-output="addCurveManager(`arcAngle,${angle}`,true),addCurveManager(`curveDir,${direction}`)"></canvas>
+                </div>
+                <div class="border-top p-h5">
+                    <input type="range" class="range-type1 m-h5" id="random_arc1-rangeOrigin" data-max="360" data-min="0" data-from="180" data-step="5" data-temp="addCurveManager(`angleTurned,${val.from}`),arcViewer(this.output,`value,${val.from}`)">
+                </div>
+                <div class="text-middle" style="flex-grow: 1;">
+                    <input type="number" max="360" min="0" data-temp="addCurveManager(`angleTurned,${this.value}`),arcViewer(this.id,`value,${this.value}`)" class="small-Input" id="random_arc1" value="180">
+                    <span><sup class="ml--3">o</sup>
+                        Arc Angle</span>
+                </div>
+            </div>
+            <!-- Custom Pseudo Code -->
+            <div class="bg-222 border" style="display: flex; flex-direction: column;">
+                <div class="p-2 border-bottom text-center font-bold bg-olive ">Code Excuted Before the Action</div>
+                <textarea class="bg-222 p-1 monospace text-left text-white" style="flex-grow: 1;"
+                    placeholder="// Put your code here"></textarea>
+            </div>
+            <div class="bg-222 border" style="display: flex; flex-direction: column;">
+                <div class="p-2 border-bottom text-center font-bold bg-warning">Code Excuted After the Action</div>
+                <textarea class="bg-222 p-1 monospace text-left text-white" style="flex-grow: 1;"
+                    placeholder="// Put your code here"></textarea>
+            </div>
+
+            <!-- Path Preview -->
+
+            <div class="add_action-pathPreview border" style="display: flex; flex-direction: column;">
+                <div class="p-1 text-center h5 border-bottom uppercase bg-555 font-bold">Path Preview</div>
+                <div style="flex-grow: 1;" class="bg-999 border-right border-white thisHeightthisWidth" id="add_curve_pathPrev">
+                    <canvas class="m-auto"></canvas>
+                    <div class="text-middle text-center"></div>
+                </div>
+            </div>
+            <!-- Save Button -->
+            <button class="seqAdd_Save bg-crimson border text-white font-bold uppercase" onclick="saveSeq('curve'),ModalRevelear(0)">Save</button>
+        </div>
+    </div>
+</body>
+<script src="jquery.js"></script>
+<script lang="javascript">
+    // Global Events
+
+    function windowResizer(){
+        thisDimensionthisDimension();
+        dpi_x = document.getElementById('dpi').offsetWidth;
+        dpi_y = document.getElementById('dpi').offsetHeight;
+        actual_Width = screen.width / dpi_x;
+        actual_Height = screen.height / dpi_y;
+        actual_WidthCM = actual_Width * 2.54;
+        actual_HeightCM = actual_Height * 2.54;
+        if (window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height)) {
+            $('#t1-warn').html(
+                "You are now in <span class='font-bold'>Fullscreen</span>! Please enjoy using the app");
+            $('#t1-warn').css('background', 'teal');
+        } else {
+            $('#t1-warn').html("Please Enter <span class='font-bold'>Fullscreen</span> for a Better View")
+            $('#t1-warn').css('background', 'var(--bs-warning)');
+        }
+        setTimeout(function () {
+            thisDimensionthisDimension();
+        }, 300);
+    }
+
+    $(window).resize(windowResizer);
+
+    // On Change Functions
+    var front = {
+        currentTab: 0,
+        nav: {
+            buttons: $('.tab-buttons')
+        },
+        tabs: {
+            tabs: $('.tabs')
+        },
+        modals: {
+            container: document.getElementById('Modal_Container'),
+            modals: document.getElementById('Modal_Container').children
+        }
+    }
+
+    function onScreenSizeChange() {
+        let base = new Number(front.currentTab);
+        for (let i = 0; i <= base; i++) {
+            tabOrganizer(i);
+            eval(`tabOperations_${i+1}()`);
+        }
+    }
+
+    // StartUp Styling
+
+    if (window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height)) {
+        $('#t1-warn').html("You are now in <span class='font-bold'>Fullscreen</span>! Please enjoy using the app");
+        $('#t1-warn').css('background', 'teal');
+    } else {
+        $('#t1-warn').html("Please Enter <span class='font-bold'>Fullscreen</span> for a Better View")
+        $('#t1-warn').css('background', 'var(--bs-warning)');
+    }
+
+    function resizeInput() {
+        $(this).attr('size', $(this).val().length);
+    }
+
+    $('input.input-autoAdjust').keyup(resizeInput).each(resizeInput);
+</script>
+<script src="d3.min.js"></script>
+<script src="ion.rangeSlider.min.js"></script>
+<script src="J-Calculator-Bundle.js"></script>
+<script src="calculator.js"></script>
+<script src="app.js"></script>
+<script src="microFunctions.js"></script>
+<script src="coder.js"></script>
+<script src="visualizer.js"></script>
+
+</html>
