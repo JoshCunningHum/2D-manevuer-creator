@@ -11,6 +11,6 @@ Extremely unreadable, will restructure this if I have free time
 ![ScreenShot](/Screenshot/sequence.png)
  - Copy the code generated in the Code Tab
 ![ScreenShot](/Screenshot/code.png)
- - Paste that shit (because it looks like shit) in your arduino IDE and call it through the name of the maneuver you provided (e.g. ThisWillMakeMeWinManeuver() )
+ - Paste that shit (because it looks like shit) in your arduino IDE and call it through the name of the maneuver you provided (e.g. ``ThisWillMakeMeWinManeuver()`` )
 
 Right now it is still buggy when using the curve path
