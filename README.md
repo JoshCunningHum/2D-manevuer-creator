@@ -6,10 +6,10 @@ Extremely unreadable, will restructure this if I have free time
 ## How to use
 
  - Put the specs of your robot in the Main Inputs Tab
-![ScreenShot](/screenshots/maininputs.png)
+![ScreenShot](/Screenshot/maininputs.png)
  - Create your path in the Sequence Tab
-![ScreenShot](/screenshots/sequence.png)
+![ScreenShot](/Screenshot/sequence.png)
  - Copy the code generated in the Code Tab
-![ScreenShot](/screenshots/code.png)
+![ScreenShot](/Screenshot/code.png)
 
 Right now it is still buggy when using the curve path
